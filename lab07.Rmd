@@ -54,6 +54,9 @@ set.seed(42)
 
 
 
+```{r}
+dataset <- Arbuthnot%>% filter (Year != 1704) 
+```
 
 ### Exercise 2
 
