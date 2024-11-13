@@ -60,25 +60,69 @@ dataset <- Arbuthnot%>% filter (Year != 1704)
 
 ### Exercise 2
 
+```{r}
+ggplot(data = dataset) +
+geom_boxplot(aes(x = "", y = Ratio), fill = "blue", color = "black", aplha = 0.5) + geom_histogram(aes(x = Ratio, y = ..density..), binwidth = 0.1, fill = "lightblue", color = "black", aplha = 0.7) +
+  labs (title = "histogram of ratio (PMF)", x = "Ratio", y = "Density")
+  coord_flip()
+```
+
 
 
 
 ### Exercise 3
+
+```{r}
+ggplot(data = dataset, aes(x = Ratio)) + geom_histogram(aes(y = ..density..), binwidth = 81, fill = "skyblue", color = "black", aplha = 0.7) +
+  geom_density(fill = "red", aplha = 0.3) + labs (title = "density plot and pmf of ratio", x = "ration", y = "density")
+```
+
 
 
 
 
 ### Exercise 4
 
-
-
+  )
+```{r}
+dataset %>%
+  summarize(
+    mean = mean(Ratio),
+    median = median(Ratio),
+    sd = sd(Ratio),
+    iqr = IQR(Ratio),
+    min = min(Ratio),
+    max = max(Ratio)
+  )
+```
 
 ## `infer`ing a trend
 
 ### Exercise 5
 
+Write down (in words) the null hypothesis and the alternative hypothesis for comparing this dataset against the tested mean value of 1.
 
 
+```{r}
+dataset_null <- dataset %>%
+  specify(formula = Ratio ~ NULL) %>%
+  hypothesize(null = "point", mu = 1) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+```
+
+```{r}
+dataset_obs_stat <- dataset %>%
+  specify( Ratio ~ NULL) %>%
+  calculate(stat = "mean")
+```
+
+
+```{r}
+visualize(dataset_null) +
+  shade_p_value(obs_stat = dataset_obs_stat, direction = "two_sided")
+```
+Based on the codes that you’ve ran above to make statistical inferences, explain the result of your hypothesis testing.
 
 ### Exercise 6
 
